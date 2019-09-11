@@ -1,35 +1,29 @@
 package com.everis.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.Serializable;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Document(collection = "students")
-public class Students implements Serializable{
+public class Students implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4918046051378102684L;
+  private static final long serialVersionUID = -4918046051378102684L;
 
-	@Id
-	@NotNull
-	String id;
-	
-	String Nombrecompleto;
-    String Genero;
+  @Id
+  @NotNull
+   String id;
+
+  String fullName;
+  String gender;
     //@JsonFormat(pattern = "yyy-MM-dd")
-    String Fechanacimiento;
-    String Tipodocumentoidentificacion;
-    String Numerodocumentoidentificacion;  
+  String dateofBirth;
+  String typeofIdentificationDocument;
+  String identificationDocumentNumber;  
 }
