@@ -15,14 +15,11 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface ReactiveRepository extends ReactiveMongoRepository<Students, Serializable> {
 
-  @Query("{ 'fullName': ?0 }")
-  Flux<Students> findByfullName(String fullName);
+  Flux<Students> findByFullName(String fullName);
 
-  @Query("{ 'identificationDocumentNumber': ?0 }")
-  Mono<Students> findByidentificationDocumentNumber(String identificationDocumentNumber);
+  Mono<Students> findByIdentificationDocumentNumber(String identificationDocumentNumber);
 
-	//@Query("select t from Students t where t. = ?1")
-//	Flux<Students> findByrankDate(Date date1, Date date2 );
+  Flux<Students> findByDateofBirthBetween(Date from, Date to);
 
   Mono<Students> findById(String id);
 
