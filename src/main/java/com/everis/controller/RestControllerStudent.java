@@ -44,7 +44,12 @@ public class RestControllerStudent {
       @PathVariable  @DateTimeFormat(iso = ISO.DATE)  Date to) {
     return repository.searchbyrankdateofBirth(from, to);
   }
-
+  
+  /**
+   * 
+   * @param student
+   * @return 
+   */
   @PostMapping("/")
   public Mono<ResponseEntity<Students>> createStudent(@RequestBody Students student) {
     return repository.createStudent(student)
