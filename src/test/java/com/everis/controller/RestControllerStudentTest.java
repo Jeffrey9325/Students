@@ -25,79 +25,70 @@ import reactor.core.publisher.Mono;
 public class RestControllerStudentTest {
 
   @Autowired
-  WebTestClient webTestClient;
+  private WebTestClient webTestClient;
 
   @Autowired
-  ReactiveRepository repository;
-
+  private ReactiveRepository repository;
+  /**
+   * unit test.
+   */
+  
   @Test
   public void searchbyName() {
     
     Students student = repository.findByFullName("jeffrey").blockFirst();
     if (student != null) {
-    webTestClient.get()
-        .uri("/Students/v1.0/names/{fullName}", Collections
-        .singletonMap("fullName", student.getFullName()))
-        .accept(MediaType.APPLICATION_JSON_UTF8)
-        .exchange()
-        .expectStatus().isOk()
-        .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
-        .expectBodyList(Students.class)
-        .consumeWith(response -> {
-          List<Students> studentList = response.getResponseBody();
-          studentList.forEach(p -> {
-            System.out.println(p.getId());
-            System.out.println(p.getFullName());
-            System.out.println(p.getGender());
-            System.out.println(p.getDateofBirth());
-            System.out.println(p.getTypeofIdentificationDocument());
-            System.out.println(p.getIdentificationDocumentNumber());
-          });
-        });
+      webTestClient.get()
+           .uri("/Students/v1.0/names/{fullName}", Collections
+           .singletonMap("fullName", student.getFullName()))
+           .accept(MediaType.APPLICATION_JSON_UTF8)
+           .exchange()
+           .expectStatus().isOk()
+           .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+           .expectBodyList(Students.class)
+           .consumeWith(response -> {
+             List<Students> studentList = response.getResponseBody();
+             studentList.forEach(p -> {
+               System.out.println(p.getId());
+               System.out.println(p.getFullName());
+               System.out.println(p.getGender());
+               System.out.println(p.getDateofBirth());
+               System.out.println(p.getTypeDocument());
+               System.out.println(p.getDocumentNumber());
+             });
+           });
     }
   }
-
+  /**
+   * unit test.
+   */
+  
   @Test
   public void searchbyDocument() {
 
-    Students student = repository.findByIdentificationDocumentNumber("47704995").block();
+    Students student = repository.findByDocumentNumber("47704995").block();
     if (student != null) {
-    webTestClient.get()
-        .uri("/Students/v1.0/documents/{document}", Collections
-        .singletonMap("document", student.getIdentificationDocumentNumber()))
-        .accept(MediaType.APPLICATION_JSON_UTF8)
-        .exchange()
-        .expectStatus().isOk()
-        .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
-        .expectBody(Students.class)
-        .consumeWith(response -> {
-          Assertions.assertThat(response.getResponseBody()).isNotNull();
-        });
+      webTestClient.get()
+          .uri("/Students/v1.0/documents/{document}", Collections
+          .singletonMap("document", student.getDocumentNumber()))
+          .accept(MediaType.APPLICATION_JSON_UTF8)
+          .exchange()
+          .expectStatus().isOk()
+          .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+          .expectBody(Students.class)
+          .consumeWith(response -> {
+            Assertions.assertThat(response.getResponseBody()).isNotNull();
+          });
     }
   }
 
-//	@Test
-//	public void searchbyrankdateofBirth() {
-//		
-//		Students student = repository.findByDateofBirthBetween("", "").block();
-//		webTestClient.get()
-//                .uri("/Students/v1.0/dates/{from}/{to}", Collections.singletonMap("document", student.getIdentificationDocumentNumber()))
-//                .accept(MediaType.APPLICATION_JSON_UTF8)
-//                .exchange()
-//                .expectStatus().isOk()
-//                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
-//                .expectBody(Students.class)
-//                .consumeWith(response -> {
-//                    Students show = response.getResponseBody();
-//                    Assertions.assertThat(show.getIdentificationDocumentNumber()).isNotEmpty();
-//                    Assertions.assertThat(show.getIdentificationDocumentNumber().length()>0).isTrue();
-//
-//                });
-//	
-//	}
-
+  /**
+   * unit test.
+   * @throws ParseException
+   */
+  
   @Test
-  public void createStudent() throws java.text.ParseException {
+  public void createStudent() throws ParseException {
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     Date fecha = sdf.parse("2019-09-16");
@@ -110,7 +101,10 @@ public class RestControllerStudentTest {
         .exchange()
         .expectStatus().isCreated();
   }
-
+  /**
+   * unit test.
+   */
+  
   @Test
   public void allStudents() {
 
@@ -128,22 +122,27 @@ public class RestControllerStudentTest {
             System.out.println(p.getFullName());
             System.out.println(p.getGender());
             System.out.println(p.getDateofBirth());
-            System.out.println(p.getTypeofIdentificationDocument());
-            System.out.println(p.getIdentificationDocumentNumber());
+            System.out.println(p.getTypeDocument());
+            System.out.println(p.getDocumentNumber());
           });
 			//Assertions.assertThat(student.size()==6)
         });
   }
-
+  /**
+   * unit test.
+   * @throws ParseException
+   */
+  
   @Test
   public void updateStudent() throws ParseException {
 
     Students student = repository.findById("1").block();
     if (student != null) {
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    Date fecha = sdf.parse("2019-09-16");
-    Students newStudent = new Students(student.getId(), "Jeff", "m", fecha, "dni", "159748");
-    webTestClient.put()
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      Date fecha = sdf.parse("2019-09-16");
+      Students newStudent = new Students(
+          student.getId(), "Jeff", "m", fecha, "dni", "159748");
+      webTestClient.put()
         .uri("/Students/v1.0/{id}", Collections.singletonMap("id", student.getId()))
         .contentType(MediaType.APPLICATION_JSON_UTF8)
         .accept(MediaType.APPLICATION_JSON_UTF8)
@@ -156,13 +155,16 @@ public class RestControllerStudentTest {
         .jsonPath("$.id").isEqualTo("1");
     }
   }
-
+  /**
+   * unit test.
+   */
+  
   @Test
   public void deleteStudents() {
 
     Students student = repository.findById("1").block();
     if (student != null) {
-    webTestClient.delete()
+      webTestClient.delete()
         .uri("/Students/v1.0/{id}", Collections.singletonMap("id", student.getId()))
         .exchange()
         .expectStatus().isNoContent();

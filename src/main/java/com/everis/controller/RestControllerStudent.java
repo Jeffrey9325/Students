@@ -4,6 +4,9 @@ import com.everis.model.Students;
 import com.everis.service.StudentServiceImpl;
 
 import java.util.Date;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -24,63 +27,96 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/Students/v1.0")
 public class RestControllerStudent {
-
+  /**
+   * Student Service Implement.
+   */
   @Autowired
-  StudentServiceImpl repository;
-
+  public StudentServiceImpl repository;
+  /**
+   * search by full name parents document.
+   * @param fullName full name
+   * @return
+   */
+  
   @GetMapping("/names/{fullName}")
-  public Flux<Students> searchbyName(@PathVariable String fullName) {
+  public Flux<Students> searchbyName(@PathVariable final String fullName) {
     return repository.searchbyName(fullName);
   }
-
+  /**
+   * search by identification document number student document.
+   * @param document identification document number
+   * @return
+   */
+  
   @GetMapping("/documents/{document}")
-  public Mono<Students> searchbyDocument(@PathVariable String document) {
+  public Mono<Students> searchbyDocument(@PathVariable final String document) {
     return repository.searchbyDocument(document);
   }
-
-  @GetMapping("/dates/{from}/{to}")
-  public Flux<Students> searchbyrankdateofBirth(
-      @PathVariable @DateTimeFormat(iso = ISO.DATE) Date from,
-      @PathVariable  @DateTimeFormat(iso = ISO.DATE)  Date to) {
-    return repository.searchbyrankdateofBirth(from, to);
-  }
-  
   /**
-   * 
-   * @param student
-   * @return 
+   * search by rank date of Birth student document.
+   * @param fromDate date
+   * @param toDate date
+   * @return
    */
+  
+  @GetMapping("/dates/{fromDate}/{toDate}")
+  public Flux<Students> searchbyrankdateofBirth(
+      @PathVariable @DateTimeFormat(iso = ISO.DATE) final Date fromDate,
+      @PathVariable  @DateTimeFormat(iso = ISO.DATE)  final Date toDate) {
+    return repository.searchbyrankdateofBirth(fromDate, toDate);
+  }
+  /**
+   * create record student document.
+   * @param student student
+   * @return
+   */
+  
   @PostMapping("/")
-  public Mono<ResponseEntity<Students>> createStudent(@RequestBody Students student) {
+  public Mono<ResponseEntity<Students>> createStudent(@Valid @RequestBody final Students student) {
     return repository.createStudent(student)
     .then(Mono.just(new ResponseEntity<Students>(HttpStatus.CREATED)))
     .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
-
+  /**
+   * show all record of student document.
+   * @return
+   */
+  
   @GetMapping("/")
   public Flux<Students> allStudents() {
     return repository.allStudents();
   }
-
+  /**
+   * modify record of student document.
+   * @param id identification
+   * @param student student
+   * @return
+   */
+  
   @PutMapping("/{id}")
-  public Mono<ResponseEntity<Students>> modifyStudent(@PathVariable String id,
-      @RequestBody Students student) {
+  public Mono<ResponseEntity<Students>> modifyStudent(@PathVariable final String id,
+      @Valid @RequestBody final Students student) {
     return repository.findbyId(id)
     .flatMap(people -> {
       people.setId(id);
       people.setFullName(student.getFullName());
       people.setGender(student.getGender());
       people.setDateofBirth(student.getDateofBirth());
-      people.setTypeofIdentificationDocument(student.getTypeofIdentificationDocument());
-      people.setIdentificationDocumentNumber(student.getIdentificationDocumentNumber());
+      people.setTypeDocument(student.getTypeDocument());
+      people.setDocumentNumber(student.getDocumentNumber());
       return repository.modifyStudent(people);
     })
     .map(update -> new ResponseEntity<>(update, HttpStatus.OK))
     .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
- 
+  /**
+   * delete record in student document.
+   * @param id identification
+   * @return
+   */
+  
   @DeleteMapping("/{id}")
-  public Mono<ResponseEntity<Void>> deleteStudents(@PathVariable String id) {
+  public Mono<ResponseEntity<Void>> deleteStudents(@PathVariable final String id) {
     return repository.findbyId(id)
     .flatMap(people ->
     repository.deleteStudents(people)

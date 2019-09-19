@@ -11,33 +11,37 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 /**
- * 
- * @author Jeffrey
- *
+ * StudentServiceImpl class.
+ * @author jeffrey
+ * @version v1.0
  */
+
 @Service
 public class StudentServiceImpl implements IstudentsService {
-
+  /**
+   * Reactive Repository.
+   */
   @Autowired
-  ReactiveRepository repository;
-
+  private ReactiveRepository repository;
+ 
+  
   @Override
-  public Flux<Students> searchbyName(String name) {
+  public Flux<Students> searchbyName(final String name) {
     return repository.findByFullName(name);
   }
 
   @Override
-  public Mono<Students> searchbyDocument(String document) {
-    return repository.findByIdentificationDocumentNumber(document);
+  public Mono<Students> searchbyDocument(final String document) {
+    return repository.findByDocumentNumber(document);
   }
 
   @Override
-  public Flux<Students> searchbyrankdateofBirth(Date from, Date to) {
-    return repository.findByDateofBirthBetween(from, to);
+  public Flux<Students> searchbyrankdateofBirth(final Date fromDate, final Date toDate) {
+    return repository.findByDateofBirthBetween(fromDate, toDate);
   }
 
   @Override
-  public Mono<Students> createStudent(Students student) {
+  public Mono<Students> createStudent(final Students student) {
     return repository.save(student);
   }
 
@@ -47,17 +51,17 @@ public class StudentServiceImpl implements IstudentsService {
   }
 
   @Override
-  public Mono<Students> modifyStudent(Students student) {
+  public Mono<Students> modifyStudent(final Students student) {
     return repository.save(student);
   }
 
   @Override
-  public Mono<Void> deleteStudents(Students student) {
+  public Mono<Void> deleteStudents(final Students student) {
     return repository.delete(student);
   }
 
   @Override
-  public Mono<Students> findbyId(String id) {
-    return repository.findById(id);
+  public Mono<Students> findbyId(final String idStudent) {
+    return repository.findById(idStudent);
   }
 }
