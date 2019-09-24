@@ -1,8 +1,13 @@
 package com.everis.controller;
 
+import com.everis.exception.ProductNotFoundException;
 import com.everis.model.Students;
 import com.everis.service.StudentServiceImpl;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.ribbon.proxy.annotation.Hystrix;
 
+import java.sql.Array;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.validation.Valid;
@@ -75,6 +80,8 @@ public class RestControllerStudent {
   public Mono<ResponseEntity<Students>> createStudent(@Valid @RequestBody final Students student) {
     return repository.createStudent(student)
     .then(Mono.just(new ResponseEntity<Students>(HttpStatus.CREATED)))
+   
+//    .switchIfEmpty(Mono.error(new ProductNotFoundException("vacio")))
     .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
   /**
@@ -82,10 +89,27 @@ public class RestControllerStudent {
    * @return
    */
   
+//  @HystrixCommand(fallbackMethod = "metodoalternativo")
   @GetMapping("/")
   public Flux<Students> allStudents() {
     return repository.allStudents();
   }
+  
+//  public Flux<Students> metodoalternativo(){
+//	  
+//	  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//      Date date = sdf.parse("2019-09-16");
+//	  
+//	  Students student = new Students();
+//	  student.setId("17");
+//	  student.setFullName("pepito");
+//	  student.setGender("m");
+//	  student.setTypeDocument("dni");
+//	  student.setDateofBirth(date);
+//	  student.setDocumentNumber("14528985");
+//	  return Array.t student;
+//  }
+  
   /**
    * modify record of student document.
    * @param id identification
@@ -107,6 +131,8 @@ public class RestControllerStudent {
       return repository.modifyStudent(people);
     })
     .map(update -> new ResponseEntity<>(update, HttpStatus.OK))
+    //.orElseThrow(() -> new ProductNotFoundException("vacio"))
+    //.orElseThrow(Mono.error(new ProductNotFoundException("vacio")))
     .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
   /**
@@ -114,7 +140,7 @@ public class RestControllerStudent {
    * @param id identification
    * @return
    */
-  
+ 
   @DeleteMapping("/{id}")
   public Mono<ResponseEntity<Void>> deleteStudents(@PathVariable final String id) {
     return repository.findbyId(id)
@@ -124,4 +150,5 @@ public class RestControllerStudent {
     )
     .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
+   
 }

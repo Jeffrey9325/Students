@@ -11,6 +11,7 @@
 	<groupId>com.everis</groupId>
 	<artifactId>StudentMicroservice</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>StudentMicroservice</name>
 	<description>MicroserviceStudents</description>
 
@@ -79,6 +80,18 @@
  			  <version>3.0.0-SNAPSHOT</version>
  			  <scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>
+				spring-cloud-starter-netflix-eureka-client
+			</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>
+				spring-cloud-starter-netflix-hystrix
+			</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -126,7 +139,20 @@
                 </configuration>
             </plugin>
 		</plugins>
+		<finalName>app</finalName>
 	</build>
 	
+	
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>Greenwich.SR3</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 </project>
