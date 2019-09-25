@@ -12,6 +12,8 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -23,6 +25,8 @@ import reactor.core.publisher.Mono;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class RestControllerStudentTest {
+	
+  private static Logger LOG = LoggerFactory.getLogger(RestControllerStudentTest.class);
 
   @Autowired
   private WebTestClient webTestClient;
@@ -118,6 +122,11 @@ public class RestControllerStudentTest {
         .consumeWith(response -> {
           List<Students> student = response.getResponseBody();
           student.forEach(p -> {
+        	  LOG.info(p.getId());
+        	  LOG.info("ESTE ES INFO");
+        	  LOG.trace("ESTE ES TRACE");
+        	  LOG.debug("ESTE ES DEBUG");
+        	  LOG.warn("ESTE ES WARN");
             System.out.println(p.getId());
             System.out.println(p.getFullName());
             System.out.println(p.getGender());

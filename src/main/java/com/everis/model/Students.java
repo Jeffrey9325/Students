@@ -15,6 +15,7 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,7 +26,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-//@Builder
+@Builder
 @Document(collection = "students")
 @JsonPropertyOrder({"id", "fullName", "gender",
     "dateofBirth", "typeDocument", "documentNumber"})

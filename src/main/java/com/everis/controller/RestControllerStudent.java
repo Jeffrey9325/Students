@@ -3,15 +3,20 @@ package com.everis.controller;
 import com.everis.exception.ProductNotFoundException;
 import com.everis.model.Students;
 import com.everis.service.StudentServiceImpl;
+
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.ribbon.proxy.annotation.Hystrix;
 
 import java.sql.Array;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -32,6 +37,8 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/Students/v1.0")
 public class RestControllerStudent {
+	
+	private static Logger LOG = LoggerFactory.getLogger(RestControllerStudent.class);
   /**
    * Student Service Implement.
    */
@@ -89,27 +96,27 @@ public class RestControllerStudent {
    * @return
    */
   
-//  @HystrixCommand(fallbackMethod = "metodoalternativo")
+  @HystrixCommand(fallbackMethod = "metodoalternativo")
   @GetMapping("/")
-  public Flux<Students> allStudents() {
+  public Flux<Students> allStudents() {  
     return repository.allStudents();
   }
   
-//  public Flux<Students> metodoalternativo(){
+//  
+//	  String <Students> student = new Students("17", "pepito", "m", "dni", date, "14528985"); 
+//	  student.flatMap(mapper)
+//	  List<String> student =  Arrays.asList("17", "pepito", "m", "dni", date.toString(), "14528985"); 
+//	  student.stream()
 //	  
-//	  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//      Date date = sdf.parse("2019-09-16");
-//	  
-//	  Students student = new Students();
+
+	
+	  
 //	  student.setId("17");
 //	  student.setFullName("pepito");
 //	  student.setGender("m");
 //	  student.setTypeDocument("dni");
 //	  student.setDateofBirth(date);
 //	  student.setDocumentNumber("14528985");
-//	  return Array.t student;
-//  }
-  
   /**
    * modify record of student document.
    * @param id identification
