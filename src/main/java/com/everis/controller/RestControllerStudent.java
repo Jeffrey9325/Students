@@ -1,17 +1,11 @@
 package com.everis.controller;
 
-import com.everis.exception.ProductNotFoundException;
 import com.everis.model.Students;
 import com.everis.service.StudentServiceImpl;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.ribbon.proxy.annotation.Hystrix;
 
-import java.sql.Array;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import javax.validation.Valid;
 
@@ -96,7 +90,7 @@ public class RestControllerStudent {
    * @return
    */
   
-  @HystrixCommand(fallbackMethod = "metodoalternativo")
+  //@HystrixCommand(fallbackMethod = "metodoalternativo")
   @GetMapping("/")
   public Flux<Students> allStudents() {  
     return repository.allStudents();
